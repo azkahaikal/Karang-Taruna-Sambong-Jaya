@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Program - Karang Taruna Sambong Jaya</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #2D5016;
+            --secondary-terracotta: #C65D07;
+            --accent-yellow: #F4A261;
+            --neutral-cream: #F7F3E9;
+        }
+        
+        .font-display { font-family: 'Playfair Display', serif; }
+        .font-body { font-family: 'Inter', sans-serif; }
+        .font-accent { font-family: 'Poppins', sans-serif; }
+        
+        .nav-link {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: var(--accent-yellow);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .program-card {
+            transition: all 0.3s ease;
+        }
+        
+        .program-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .calendar-day {
+            transition: all 0.2s ease;
+        }
+        
+        .calendar-day:hover {
+            background-color: var(--accent-yellow);
+            color: white;
+        }
+        
+        .calendar-day.has-event {
+            background-color: var(--secondary-terracotta);
+            color: white;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .form-step {
+            display: none;
+        }
+        
+        .form-step.active {
+            display: block;
+        }
+        
+        .progress-bar {
+            height: 4px;
+            background-color: #e5e7eb;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: var(--secondary-terracotta);
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body class="font-body bg-stone-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg fixed w-full top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <h1 class="font-display text-xl font-bold text-green-800">Karang Taruna</h1>
+                        <p class="text-xs text-orange-600 font-accent">Sambong Jaya</p>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="index.html" class="nav-link text-gray-600 hover:text-green-800 font-medium">Beranda</a>
+                        <a href="profil.html" class="nav-link text-gray-600 hover:text-green-800 font-medium">Profil</a>
+                        <a href="program.html" class="nav-link text-green-800 font-medium">Program</a>
+                        <a href="galeri.html" class="nav-link text-gray-600 hover:text-green-800 font-medium">Galeri</a>
+                        <a href="kontak.html" class="nav-link text-gray-600 hover:text-green-800 font-medium">Kontak</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-gray-600 hover:text-green-800">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="md:hidden hidden bg-white border-t">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="index.html" class="block px-3 py-2 text-gray-600 hover:text-green-800">Beranda</a>
+                <a href="profil.html" class="block px-3 py-2 text-gray-600 hover:text-green-800">Profil</a>
+                <a href="program.html" class="block px-3 py-2 text-green-800 font-medium">Program</a>
+                <a href="galeri.html" class="block px-3 py-2 text-gray-600 hover:text-green-800">Galeri</a>
+                <a href="kontak.html" class="block px-3 py-2 text-gray-600 hover:text-green-800">Kontak</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-r from-green-800 to-green-600 pt-24 pb-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h1 class="font-display text-4xl lg:text-6xl font-bold text-white mb-6">
+                    Program & Kegiatan
+                </h1>
+                <p class="text-xl text-green-100 max-w-3xl mx-auto leading-relaxed">
+                    Berbagai program pemberdayaan masyarakat dan pengembangan diri yang telah kami laksanakan untuk kemajuan Sambong Jaya.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Program Categories -->
+    <section class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-display text-3xl lg:text-4xl font-bold text-green-800 mb-6">
+                    Kategori Program
+                </h2>
+                <div class="flex flex-wrap justify-center gap-4 mb-8">
+                    <button class="filter-btn active bg-green-600 text-white px-6 py-2 rounded-full font-medium" data-filter="all">
+                        Semua Program
+                    </button>
+                    <button class="filter-btn bg-gray-200 text-gray-700 hover:bg-green-100 px-6 py-2 rounded-full font-medium" data-filter="entrepreneurship">
+                        Kewirausahaan
+                    </button>
+                    <button class="filter-btn bg-gray-200 text-gray-700 hover:bg-green-100 px-6 py-2 rounded-full font-medium" data-filter="education">
+                        Pendidikan
+                    </button>
+                    <button class="filter-btn bg-gray-200 text-gray-700 hover:bg-green-100 px-6 py-2 rounded-full font-medium" data-filter="environment">
+                        Lingkungan
+                    </button>
+                    <button class="filter-btn bg-gray-200 text-gray-700 hover:bg-green-100 px-6 py-2 rounded-full font-medium" data-filter="social">
+                        Sosial
+                    </button>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="programs-grid">
+                <div class="program-card bg-stone-50 rounded-xl overflow-hidden shadow-lg" data-category="entrepreneurship">
+                    <img src="resources/community-activity-1.jpg" alt="Pelatihan Kewirausahaan" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex items-center mb-3">
+                            <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full mr-2">Kewirausahaan</span>
+                            <span class="bg-green-500 text-white text-xs px-2 py-1 rounded-full">Aktif</span>
+                        </div>
+                        <h3 class="font-display text-xl font-bold text-green-800 mb-3">Pelatihan Kewirausahaan</h3>
+                        <p class="text-gray-600 mb-4 leading-relaxed">
+                            Program pengembangan usaha mikro dan peningkatan kapasitas wirausaha muda melalui workshop praktik dan pendampingan intensif.
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500">50 Peserta/Tahun</span>
+                            <button class="register-btn bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors" data-program="Pelatihan Kewirausahaan">
+                                Daftar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="program-card bg-stone-50 rounded-xl overflow-hidden shadow-lg" data-category="education">
+                    <img src="resources/training-session.jpg" alt="Pelatihan Keterampilan" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex items-center mb-3">
+                            <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full mr-2">Pendidikan</span>
+                            <span class="bg-green-500 text-white text-xs px-2 py-1 rounded-full">Aktif</span>
+                        </div>
+                        <h3 class="font-display text-xl font-bold text-green-800 mb-3">Pelatihan Keterampilan</h3>
+                        <p class="text-gray-600 mb-4 leading-relaxed">
+                            Workshop praktik kerajinan tangan, digital marketing, dan pengembangan skill untuk meningkatkan daya saing di dunia kerja.
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500">100 Peserta/Tahun</span>
+                            <button class="register-btn bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors" data-program="Pelatihan Keterampilan">
+                                Daftar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="program-card bg-stone-50 rounded-xl overflow-hidden shadow-lg" data-category="environment">
+                    <img src="resources/youth-gathering.jpg" alt="Kegiatan Lingkungan" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex items-center mb-3">
+                            <span class="bg-emerald-100 text-emerald-800 text-xs px-2 py-1 rounded-full mr-2">Lingkungan</span>
+                            <span class="bg-green-500 text-white text-xs px-2 py-1 rounded-full">Aktif</span>
+                        </div>
+                        <h3 class="font-display text-xl font-bold text-green-800 mb-3">Kegiatan Lingkungan</h3>
+                        <p class="text-gray-600 mb-4 leading-relaxed">
+                            Program penanaman pohon, pengelolaan sampah, dan edukasi lingkungan hidup untuk menjaga kelestarian alam Sambong Jaya.
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500">200 Peserta/Tahun</span>
+                            <button class="register-btn bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors" data-program="Kegiatan Lingkungan">
+                                Daftar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="program-card bg-stone-50 rounded-xl overflow-hidden shadow-lg" data-category="social">
+                    <img src="resources/village-scene.jpg" alt="Bakti Sosial" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex items-center mb-3">
+                            <span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full mr-2">Sosial</span>
+                            <span class="bg-green-500 text-white text-xs px-2 py-1 rounded-full">Aktif</span>
+                        </div>
+                        <h3 class="font-display text-xl font-bold text-green-800 mb-3">Bakti Sosial</h3>
+                        <p class="text-gray-600 mb-4 leading-relaxed">
+                            Kegiatan sosial untuk masyarakat kurang mampu dan program bantuan kemanusiaan sebagai wujud kepedulian sosial.
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500">150 Peserta/Tahun</span>
+                            <button class="register-btn bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors" data-program="Bakti Sosial">
+                                Daftar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="program-card bg-stone-50 rounded-xl overflow-hidden shadow-lg" data-category="education">
+                    <img src="resources/community-activity-2.jpg" alt="Pelatihan Digital" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex items-center mb-3">
+                            <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full mr-2">Pendidikan</span>
+                            <span class="bg-yellow-500 text-white text-xs px-2 py-1 rounded-full">Segera</span>
+                        </div>
+                        <h3 class="font-display text-xl font-bold text-green-800 mb-3">Pelatihan Digital</h3>
+                        <p class="text-gray-600 mb-4 leading-relaxed">
+                            Program literasi digital dan pelatihan penggunaan teknologi untuk meningkatkan keterampilan di era digital.
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500">80 Peserta/Tahun</span>
+                            <button class="register-btn bg-gray-400 text-white px-4 py-2 rounded-lg text-sm font-medium cursor-not-allowed">
+                                Segera Hadir
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="program-card bg-stone-50 rounded-xl overflow-hidden shadow-lg" data-category="entrepreneurship">
+                    <img src="resources/youth-gathering.jpg" alt="Inkubator Bisnis" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex items-center mb-3">
+                            <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full mr-2">Kewirausahaan</span>
+                            <span class="bg-yellow-500 text-white text-xs px-2 py-1 rounded-full">Segera</span>
+                        </div>
+                        <h3 class="font-display text-xl font-bold text-green-800 mb-3">Inkubator Bisnis</h3>
+                        <p class="text-gray-600 mb-4 leading-relaxed">
+                            Program pendampingan intensif untuk startup lokal dengan akses ke mentor dan pendanaan awal.
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500">20 Startup/Tahun</span>
+                            <button class="register-btn bg-gray-400 text-white px-4 py-2 rounded-lg text-sm font-medium cursor-not-allowed">
+                                Segera Hadir
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Event Calendar -->
+    <section class="py-20 bg-stone-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-display text-3xl lg:text-4xl font-bold text-green-800 mb-6">
+                    Kalender Kegiatan
+                </h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    Jadwal kegiatan dan acara yang akan datang. Jangan lewatkan kesempatan untuk berpartisipasi!
+                </p>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow-lg p-8">
+                <div class="flex items-center justify-between mb-8">
+                    <h3 class="font-display text-2xl font-bold text-green-800">Desember 2024</h3>
+                    <div class="flex space-x-2">
+                        <button id="prev-month" class="p-2 hover:bg-gray-100 rounded-lg">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                            </svg>
+                        </button>
+                        <button id="next-month" class="p-2 hover:bg-gray-100 rounded-lg">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-7 gap-2 mb-4">
+                    <div class="text-center font-medium text-gray-600 py-2">Min</div>
+                    <div class="text-center font-medium text-gray-600 py-2">Sen</div>
+                    <div class="text-center font-medium text-gray-600 py-2">Sel</div>
+                    <div class="text-center font-medium text-gray-600 py-2">Rab</div>
+                    <div class="text-center font-medium text-gray-600 py-2">Kam</div>
+                    <div class="text-center font-medium text-gray-600 py-2">Jum</div>
+                    <div class="text-center font-medium text-gray-600 py-2">Sab</div>
+                </div>
+                
+                <div class="grid grid-cols-7 gap-2" id="calendar-grid">
+                    <!-- Calendar days will be generated by JavaScript -->
+                </div>
+                
+                <div class="mt-8 p-4 bg-green-50 rounded-lg">
+                    <h4 class="font-medium text-green-800 mb-3">Kegiatan Mendatang:</h4>
+                    <div class="space-y-2">
+                        <div class="flex items-center">
+                            <span class="w-3 h-3 bg-orange-500 rounded-full mr-3"></span>
+                            <span class="text-sm text-gray-700">15 Des - Pelatihan Kewirausahaan Batch 3</span>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="w-3 h-3 bg-green-500 rounded-full mr-3"></span>
+                            <span class="text-sm text-gray-700">22 Des - Bakti Sosial Desa Tetangga</span>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="w-3 h-3 bg-blue-500 rounded-full mr-3"></span>
+                            <span class="text-sm text-gray-700">28 Des - Penanaman Pohon Tahun Baru</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Program Impact -->
+    <section class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-display text-3xl lg:text-4xl font-bold text-green-800 mb-6">
+                    Dampak Program
+                </h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    Statistik dan pencapaian dari program-program yang telah kami laksanakan.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div>
+                    <h3 class="font-display text-2xl font-bold text-green-800 mb-6">Pencapaian Tahun 2024</h3>
+                    <div class="space-y-6">
+                        <div class="flex items-center justify-between p-4 bg-stone-50 rounded-lg">
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
+                                    <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-green-800">Peserta Terlatih</h4>
+                                    <p class="text-sm text-gray-600">Total peserta program pelatihan</p>
+                                </div>
+                            </div>
+                            <span class="text-2xl font-bold text-green-600">450</span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between p-4 bg-stone-50 rounded-lg">
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mr-4">
+                                    <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-green-800">UMKM Dibantu</h4>
+                                    <p class="text-sm text-gray-600">Usaha mikro yang berkembang</p>
+                                </div>
+                            </div>
+                            <span class="text-2xl font-bold text-orange-600">85</span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between p-4 bg-stone-50 rounded-lg">
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+                                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-green-800">Masyarakat Terbantu</h4>
+                                    <p class="text-sm text-gray-600">Orang yang menerima manfaat</p>
+                                </div>
+                            </div>
+                            <span class="text-2xl font-bold text-blue-600">1,200</span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between p-4 bg-stone-50 rounded-lg">
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mr-4">
+                                    <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-green-800">Pohon Ditanam</h4>
+                                    <p class="text-sm text-gray-600">Kegiatan reboisasi</p>
+                                </div>
+                            </div>
+                            <span class="text-2xl font-bold text-emerald-600">2,500</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="font-display text-2xl font-bold text-green-800 mb-6">Statistik Program</h3>
+                    <div id="program-chart" style="width: 100%; height: 400px;"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Registration Modal -->
+    <div id="registration-modal" class="modal">
+        <div class="bg-white rounded-xl p-8 max-w-md w-full mx-4">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="font-display text-2xl font-bold text-green-800">Pendaftaran Program</h3>
+                <button id="close-modal" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="progress-bar mb-6">
+                <div class="progress-fill" id="progress-fill" style="width: 33.33%;"></div>
+            </div>
+            
+            <form id="registration-form">
+                <!-- Step 1: Program Selection -->
+                <div class="form-step active" id="step-1">
+                    <h4 class="font-medium text-green-800 mb-4">Pilih Program</h4>
+                    <div class="space-y-3">
+                        <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                            <input type="radio" name="program" value="Pelatihan Kewirausahaan" class="mr-3">
+                            <span>Pelatihan Kewirausahaan</span>
+                        </label>
+                        <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                            <input type="radio" name="program" value="Pelatihan Keterampilan" class="mr-3">
+                            <span>Pelatihan Keterampilan</span>
+                        </label>
+                        <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                            <input type="radio" name="program" value="Kegiatan Lingkungan" class="mr-3">
+                            <span>Kegiatan Lingkungan</span>
+                        </label>
+                        <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                            <input type="radio" name="program" value="Bakti Sosial" class="mr-3">
+                            <span>Bakti Sosial</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Step 2: Personal Information -->
+                <div class="form-step" id="step-2">
+                    <h4 class="font-medium text-green-800 mb-4">Data Diri</h4>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
+                            <input type="text" name="name" required class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                            <input type="email" name="email" required class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">No. Telepon</label>
+                            <input type="tel" name="phone" required class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Usia</label>
+                            <input type="number" name="age" required min="16" max="30" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Step 3: Confirmation -->
+                <div class="form-step" id="step-3">
+                    <h4 class="font-medium text-green-800 mb-4">Konfirmasi Pendaftaran</h4>
+                    <div class="bg-stone-50 p-4 rounded-lg mb-4">
+                        <p class="text-sm text-gray-600 mb-2">Program yang dipilih:</p>
+                        <p class="font-medium text-green-800" id="selected-program">-</p>
+                        <hr class="my-3">
+                        <p class="text-sm text-gray-600 mb-2">Data peserta:</p>
+                        <p class="text-sm" id="participant-info">-</p>
+                    </div>
+                    <div class="flex items-center">
+                        <input type="checkbox" name="agreement" required class="mr-2">
+                        <label class="text-sm text-gray-600">Saya setuju dengan syarat dan ketentuan program</label>
+                    </div>
+                </div>
+                
+                <div class="flex justify-between mt-6">
+                    <button type="button" id="prev-step" class="px-4 py-2 text-gray-600 hover:text-gray-800 hidden">Sebelumnya</button>
+                    <button type="button" id="next-step" class="px-6 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg font-medium">Selanjutnya</button>
+                    <button type="submit" id="submit-form" class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium hidden">Daftar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="font-display text-xl font-bold mb-4">Karang Taruna Sambong Jaya</h3>
+                    <p class="text-gray-300 leading-relaxed">
+                        Organisasi kepemudaan yang berkomitmen untuk mendorong pertumbuhan dan perkembangan masyarakat melalui program pemberdayaan dan pengembangan diri.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-accent font-semibold mb-4">Program Unggulan</h4>
+                    <ul class="space-y-2 text-gray-300">
+                        <li>Pelatihan Kewirausahaan</li>
+                        <li>Pengembangan Keterampilan</li>
+                        <li>Kegiatan Lingkungan</li>
+                        <li>Bakti Sosial</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-accent font-semibold mb-4">Kontak</h4>
+                    <div class="space-y-2 text-gray-300">
+                        <p>📍 Desa Sambong Jaya, Kecamatan Sambong</p>
+                        <p>📞 +62 812-3456-7890</p>
+                        <p>✉️ info@karangtarunasambongjaya.org</p>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 Karang Taruna Sambong Jaya. Hak cipta dilindungi.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="main.js"></script>
+    <script>
+        // Program-specific JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            initProgramFilters();
+            initCalendar();
+            initRegistrationModal();
+            initProgramChart();
+        });
+        
+        function initProgramFilters() {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const programCards = document.querySelectorAll('.program-card');
+            
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Update active button
+                    filterBtns.forEach(b => {
+                        b.classList.remove('active', 'bg-green-600', 'text-white');
+                        b.classList.add('bg-gray-200', 'text-gray-700');
+                    });
+                    this.classList.add('active', 'bg-green-600', 'text-white');
+                    this.classList.remove('bg-gray-200', 'text-gray-700');
+                    
+                    // Filter cards
+                    const filter = this.dataset.filter;
+                    programCards.forEach(card => {
+                        if (filter === 'all' || card.dataset.category === filter) {
+                            card.style.display = 'block';
+                            anime({
+                                targets: card,
+                                opacity: [0, 1],
+                                translateY: [20, 0],
+                                duration: 300,
+                                easing: 'easeOutQuad'
+                            });
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        }
+        
+        function initCalendar() {
+            const calendarGrid = document.getElementById('calendar-grid');
+            const events = {
+                '2024-12-15': 'Pelatihan Kewirausahaan',
+                '2024-12-22': 'Bakti Sosial',
+                '2024-12-28': 'Penanaman Pohon'
+            };
+            
+            // Generate calendar for December 2024
+            const daysInMonth = 31;
+            const startDay = 0; // December 1, 2024 is a Sunday
+            
+            // Add empty cells for days before the 1st
+            for (let i = 0; i < startDay; i++) {
+                const emptyDay = document.createElement('div');
+                calendarGrid.appendChild(emptyDay);
+            }
+            
+            // Add days of the month
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day text-center py-2 rounded-lg cursor-pointer';
+                dayElement.textContent = day;
+                
+                const dateStr = `2024-12-${day.toString().padStart(2, '0')}`;
+                if (events[dateStr]) {
+                    dayElement.classList.add('has-event');
+                    dayElement.title = events[dateStr];
+                }
+                
+                calendarGrid.appendChild(dayElement);
+            }
+        }
+        
+        function initRegistrationModal() {
+            const modal = document.getElementById('registration-modal');
+            const registerBtns = document.querySelectorAll('.register-btn');
+            const closeModal = document.getElementById('close-modal');
+            const nextStep = document.getElementById('next-step');
+            const prevStep = document.getElementById('prev-step');
+            const submitForm = document.getElementById('submit-form');
+            const form = document.getElementById('registration-form');
+            
+            let currentStep = 1;
+            const totalSteps = 3;
+            
+            registerBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    modal.classList.add('show');
+                    const programName = this.dataset.program;
+                    if (programName) {
+                        const programRadio = form.querySelector(`input[value="${programName}"]`);
+                        if (programRadio) {
+                            programRadio.checked = true;
+                        }
+                    }
+                });
+            });
+            
+            closeModal.addEventListener('click', function() {
+                modal.classList.remove('show');
+                resetForm();
+            });
+            
+            nextStep.addEventListener('click', function() {
+                if (validateStep(currentStep)) {
+                    currentStep++;
+                    updateStep();
+                }
+            });
+            
+            prevStep.addEventListener('click', function() {
+                currentStep--;
+                updateStep();
+            });
+            
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                if (validateStep(currentStep)) {
+                    // Simulate form submission
+                    setTimeout(() => {
+                        modal.classList.remove('show');
+                        KarangTaruna.showNotification('Pendaftaran berhasil! Kami akan menghubungi Anda segera.', 'success');
+                        resetForm();
+                    }, 1000);
+                }
+            });
+            
+            function updateStep() {
+                // Hide all steps
+                document.querySelectorAll('.form-step').forEach(step => {
+                    step.classList.remove('active');
+                });
+                
+                // Show current step
+                document.getElementById(`step-${currentStep}`).classList.add('active');
+                
+                // Update progress bar
+                const progressFill = document.getElementById('progress-fill');
+                progressFill.style.width = `${(currentStep / totalSteps) * 100}%`;
+                
+                // Update buttons
+                prevStep.classList.toggle('hidden', currentStep === 1);
+                nextStep.classList.toggle('hidden', currentStep === totalSteps);
+                submitForm.classList.toggle('hidden', currentStep !== totalSteps);
+                
+                // Update confirmation step
+                if (currentStep === 3) {
+                    updateConfirmation();
+                }
+            }
+            
+            function validateStep(step) {
+                if (step === 1) {
+                    const programSelected = form.querySelector('input[name="program"]:checked');
+                    if (!programSelected) {
+                        KarangTaruna.showNotification('Silakan pilih program yang ingin diikuti', 'error');
+                        return false;
+                    }
+                } else if (step === 2) {
+                    const name = form.querySelector('input[name="name"]').value;
+                    const email = form.querySelector('input[name="email"]').value;
+                    const phone = form.querySelector('input[name="phone"]').value;
+                    const age = form.querySelector('input[name="age"]').value;
+                    
+                    if (!name || !email || !phone || !age) {
+                        KarangTaruna.showNotification('Semua field wajib diisi', 'error');
+                        return false;
+                    }
+                }
+                return true;
+            }
+            
+            function updateConfirmation() {
+                const selectedProgram = form.querySelector('input[name="program"]:checked').value;
+                const name = form.querySelector('input[name="name"]').value;
+                const email = form.querySelector('input[name="email"]').value;
+                const phone = form.querySelector('input[name="phone"]').value;
+                
+                document.getElementById('selected-program').textContent = selectedProgram;
+                document.getElementById('participant-info').textContent = `${name} (${email})`;
+            }
+            
+            function resetForm() {
+                currentStep = 1;
+                form.reset();
+                updateStep();
+            }
+        }
+        
+        function initProgramChart() {
+            const chartDom = document.getElementById('program-chart');
+            const myChart = echarts.init(chartDom);
+            
+            const option = {
+                tooltip: {
+                    trigger: 'item'
+                },
+                legend: {
+                    top: '5%',
+                    left: 'center'
+                },
+                series: [
+                    {
+                        name: 'Program',
+                        type: 'pie',
+                        radius: ['40%', '70%'],
+                        avoidLabelOverlap: false,
+                        itemStyle: {
+                            borderRadius: 10,
+                            borderColor: '#fff',
+                            borderWidth: 2
+                        },
+                        label: {
+                            show: false,
+                            position: 'center'
+                        },
+                        emphasis: {
+                            label: {
+                                show: true,
+                                fontSize: 20,
+                                fontWeight: 'bold'
+                            }
+                        },
+                        labelLine: {
+                            show: false
+                        },
+                        data: [
+                            { value: 35, name: 'Kewirausahaan', itemStyle: { color: '#2D5016' } },
+                            { value: 30, name: 'Pendidikan', itemStyle: { color: '#C65D07' } },
+                            { value: 20, name: 'Lingkungan', itemStyle: { color: '#F4A261' } },
+                            { value: 15, name: 'Sosial', itemStyle: { color: '#7C9885' } }
+                        ]
+                    }
+                ]
+            };
+            
+            myChart.setOption(option);
+            
+            // Resize chart on window resize
+            window.addEventListener('resize', function() {
+                myChart.resize();
+            });
+        }
+    </script>
+</body>
+</html>

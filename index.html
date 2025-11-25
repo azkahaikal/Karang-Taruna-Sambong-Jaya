@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karang Taruna Sambong Jaya - Website Resmi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #2D5016;
+            --secondary-terracotta: #C65D07;
+            --accent-yellow: #F4A261;
+            --neutral-cream: #F7F3E9;
+        }
+        
+        .font-display { font-family: 'Playfair Display', serif; }
+        .font-body { font-family: 'Inter', sans-serif; }
+        .font-accent { font-family: 'Poppins', sans-serif; }
+        
+        .hero-bg {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-terracotta) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('resources/hero-karang-taruna.png') center/cover;
+            opacity: 0.3;
+            z-index: 1;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(45deg, var(--accent-yellow), var(--secondary-terracotta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-8px) rotateX(5deg);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .stats-counter {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary-green);
+        }
+        
+        .floating-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .nav-link {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: var(--accent-yellow);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="font-body bg-stone-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg fixed w-full top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <h1 class="font-display text-xl font-bold text-green-800">Karang Taruna</h1>
+                        <p class="text-xs text-orange-600 font-accent">Sambong Jaya</p>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="index.html" class="nav-link text-green-800 font-medium">Beranda</a>
+                        <a href="profil.html" class="nav-link text-gray-600 hover:text-green-800 font-medium">Profil</a>
+                        <a href="program.html" class="nav-link text-gray-600 hover:text-green-800 font-medium">Program</a>
+                        <a href="galeri.html" class="nav-link text-gray-600 hover:text-green-800 font-medium">Galeri</a>
+                        <a href="kontak.html" class="nav-link text-gray-600 hover:text-green-800 font-medium">Kontak</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-gray-600 hover:text-green-800">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="md:hidden hidden bg-white border-t">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="index.html" class="block px-3 py-2 text-green-800 font-medium">Beranda</a>
+                <a href="profil.html" class="block px-3 py-2 text-gray-600 hover:text-green-800">Profil</a>
+                <a href="program.html" class="block px-3 py-2 text-gray-600 hover:text-green-800">Program</a>
+                <a href="galeri.html" class="block px-3 py-2 text-gray-600 hover:text-green-800">Galeri</a>
+                <a href="kontak.html" class="block px-3 py-2 text-gray-600 hover:text-green-800">Kontak</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-bg min-h-screen flex items-center pt-16">
+        <div class="hero-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="text-white">
+                    <h1 class="font-display text-5xl lg:text-7xl font-bold mb-6 leading-tight">
+                        <span class="gradient-text" id="typed-text"></span>
+                    </h1>
+                    <p class="text-xl lg:text-2xl mb-8 font-light leading-relaxed">
+                        Membangun generasi muda yang berkarya, berkarakter, dan berdampak positif bagi masyarakat Sambong Jaya.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="program.html" class="bg-yellow-500 hover:bg-yellow-600 text-green-900 font-accent font-semibold px-8 py-4 rounded-lg transition-all duration-300 transform hover:scale-105 text-center">
+                            Bergabung dengan Program
+                        </a>
+                        <a href="profil.html" class="border-2 border-white text-white hover:bg-white hover:text-green-800 font-accent font-semibold px-8 py-4 rounded-lg transition-all duration-300 text-center">
+                            Tentang Kami
+                        </a>
+                    </div>
+                </div>
+                <div class="floating-animation">
+                    <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+                        <h3 class="font-display text-2xl text-white mb-6">Statistik Karang Taruna</h3>
+                        <div class="grid grid-cols-2 gap-6">
+                            <div class="text-center">
+                                <div class="stats-counter text-yellow-400" data-target="150">0</div>
+                                <p class="text-white/80 text-sm">Anggota Aktif</p>
+                            </div>
+                            <div class="text-center">
+                                <div class="stats-counter text-yellow-400" data-target="25">0</div>
+                                <p class="text-white/80 text-sm">Program Tahunan</p>
+                            </div>
+                            <div class="text-center">
+                                <div class="stats-counter text-yellow-400" data-target="8">0</div>
+                                <p class="text-white/80 text-sm">Tahun Berdiri</p>
+                            </div>
+                            <div class="text-center">
+                                <div class="stats-counter text-yellow-400" data-target="500">0</div>
+                                <p class="text-white/80 text-sm">Masyarakat Terbantu</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-display text-4xl lg:text-5xl font-bold text-green-800 mb-6">
+                    Tentang Karang Taruna Sambong Jaya
+                </h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                    Organisasi kepemudaan yang bergerak dalam pengembangan potensi generus muda melalui berbagai program pemberdayaan masyarakat dan pengembangan diri.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="card-hover bg-stone-50 rounded-xl p-8 text-center">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-display text-xl font-bold text-green-800 mb-4">Pemberdayaan Masyarakat</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Program pengembangan ekonomi kerakyatan, pelatihan keterampilan, dan pendampingan usaha mikro.
+                    </p>
+                </div>
+                
+                <div class="card-hover bg-stone-50 rounded-xl p-8 text-center">
+                    <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-display text-xl font-bold text-green-800 mb-4">Pendidikan & Pelatihan</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Kegiatan pelatihan kepemimpinan, workshop keterampilan, dan program pengembangan kapasitas.
+                    </p>
+                </div>
+                
+                <div class="card-hover bg-stone-50 rounded-xl p-8 text-center">
+                    <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-display text-xl font-bold text-green-800 mb-4">Kegiatan Sosial</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Bakti sosial, kegiatan lingkungan, dan program kemanusiaan untuk masyarakat sekitar.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Programs Carousel -->
+    <section class="py-20 bg-stone-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-display text-4xl lg:text-5xl font-bold text-green-800 mb-6">
+                    Program Unggulan
+                </h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    Berbagai program yang telah kami laksanakan untuk mendorong pertumbuhan dan perkembangan masyarakat Sambong Jaya.
+                </p>
+            </div>
+            
+            <div class="splide" id="programs-carousel">
+                <div class="splide__track">
+                    <ul class="splide__list">
+                        <li class="splide__slide">
+                            <div class="bg-white rounded-xl overflow-hidden shadow-lg">
+                                <img src="resources/community-activity-1.jpg" alt="Pelatihan Kewirausahaan" class="w-full h-48 object-cover">
+                                <div class="p-6">
+                                    <h3 class="font-display text-xl font-bold text-green-800 mb-3">Pelatihan Kewirausahaan</h3>
+                                    <p class="text-gray-600 mb-4">Program pengembangan usaha mikro dan peningkatan kapasitas wirausaha muda.</p>
+                                    <span class="inline-block bg-green-100 text-green-800 text-sm px-3 py-1 rounded-full">Aktif</span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="splide__slide">
+                            <div class="bg-white rounded-xl overflow-hidden shadow-lg">
+                                <img src="resources/training-session.jpg" alt="Pelatihan Keterampilan" class="w-full h-48 object-cover">
+                                <div class="p-6">
+                                    <h3 class="font-display text-xl font-bold text-green-800 mb-3">Pelatihan Keterampilan</h3>
+                                    <p class="text-gray-600 mb-4">Workshop praktik kerajinan tangan, digital marketing, dan pengembangan skill.</p>
+                                    <span class="inline-block bg-green-100 text-green-800 text-sm px-3 py-1 rounded-full">Aktif</span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="splide__slide">
+                            <div class="bg-white rounded-xl overflow-hidden shadow-lg">
+                                <img src="resources/youth-gathering.jpg" alt="Kegiatan Lingkungan" class="w-full h-48 object-cover">
+                                <div class="p-6">
+                                    <h3 class="font-display text-xl font-bold text-green-800 mb-3">Kegiatan Lingkungan</h3>
+                                    <p class="text-gray-600 mb-4">Program penanaman pohon, pengelolaan sampah, dan edukasi lingkungan hidup.</p>
+                                    <span class="inline-block bg-green-100 text-green-800 text-sm px-3 py-1 rounded-full">Aktif</span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="splide__slide">
+                            <div class="bg-white rounded-xl overflow-hidden shadow-lg">
+                                <img src="resources/village-scene.jpg" alt="Bakti Sosial" class="w-full h-48 object-cover">
+                                <div class="p-6">
+                                    <h3 class="font-display text-xl font-bold text-green-800 mb-3">Bakti Sosial</h3>
+                                    <p class="text-gray-600 mb-4">Kegiatan sosial untuk masyarakat kurang mampu dan program bantuan kemanusiaan.</p>
+                                    <span class="inline-block bg-green-100 text-green-800 text-sm px-3 py-1 rounded-full">Aktif</span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="py-20 bg-green-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="font-display text-4xl lg:text-5xl font-bold text-white mb-6">
+                Siap Bergabung dengan Kami?
+            </h2>
+            <p class="text-xl text-green-100 mb-8 max-w-3xl mx-auto">
+                Jadilah bagian dari perubahan positif untuk masyarakat Sambong Jaya. Bersama kita bisa membangun masa depan yang lebih baik.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="program.html" class="bg-yellow-500 hover:bg-yellow-600 text-green-900 font-accent font-semibold px-8 py-4 rounded-lg transition-all duration-300 transform hover:scale-105">
+                    Lihat Semua Program
+                </a>
+                <a href="kontak.html" class="border-2 border-yellow-500 text-yellow-500 hover:bg-yellow-500 hover:text-green-900 font-accent font-semibold px-8 py-4 rounded-lg transition-all duration-300">
+                    Hubungi Kami
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="font-display text-xl font-bold mb-4">Karang Taruna Sambong Jaya</h3>
+                    <p class="text-gray-300 leading-relaxed">
+                        Organisasi kepemudaan yang berkomitmen untuk mendorong pertumbuhan dan perkembangan masyarakat melalui program pemberdayaan dan pengembangan diri.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-accent font-semibold mb-4">Program Unggulan</h4>
+                    <ul class="space-y-2 text-gray-300">
+                        <li>Pelatihan Kewirausahaan</li>
+                        <li>Pengembangan Keterampilan</li>
+                        <li>Kegiatan Lingkungan</li>
+                        <li>Bakti Sosial</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-accent font-semibold mb-4">Kontak</h4>
+                    <div class="space-y-2 text-gray-300">
+                        <p>📍 Desa Sambong Jaya, Kecamatan Sambong</p>
+                        <p>📞 +62 812-3456-7890</p>
+                        <p>✉️ info@karangtarunasambongjaya.org</p>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 Karang Taruna Sambong Jaya. Hak cipta dilindungi.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeri - Karang Taruna Sambong Jaya</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #2D5016;
+            --secondary-terracotta: #C65D07;
+            --accent-yellow: #F4A261;
+            --neutral-cream: #F7F3E9;
+        }
+        
+        .font-display { font-family: 'Playfair Display', serif; }
+        .font-body { font-family: 'Inter', sans-serif; }
+        .font-accent { font-family: 'Poppins', sans-serif; }
+        
+        .nav-link {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: var(--accent-yellow);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .gallery-item {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+        
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .lightbox.show {
+            display: flex;
+        }
+        
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+        }
+        
+        .lightbox img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        .filter-btn {
+            transition: all 0.3s ease;
+        }
+        
+        .filter-btn.active {
+            background-color: var(--primary-green);
+            color: white;
+        }
+        
+        .masonry-grid {
+            column-count: 3;
+            column-gap: 1.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .masonry-grid {
+                column-count: 2;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .masonry-grid {
+                column-count: 1;
+            }
+        }
+        
+        .masonry-item {
+            break-inside: avoid;
+            margin-bottom: 1.5rem;
+        }
+    </style>
+</head>
+<body class="font-body bg-stone-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg fixed w-full top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <h1 class="font-display text-xl font-bold text-green-800">Karang Taruna</h1>
+                        <p class="text-xs text-orange-600 font-accent">Sambong Jaya</p>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="index.html" class="nav-link text-gray-600 hover:text-green-800 font-medium">Beranda</a>
+                        <a href="profil.html" class="nav-link text-gray-600 hover:text-green-800 font-medium">Profil</a>
+                        <a href="program.html" class="nav-link text-gray-600 hover:text-green-800 font-medium">Program</a>
+                        <a href="galeri.html" class="nav-link text-green-800 font-medium">Galeri</a>
+                        <a href="kontak.html" class="nav-link text-gray-600 hover:text-green-800 font-medium">Kontak</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-gray-600 hover:text-green-800">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="md:hidden hidden bg-white border-t">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="index.html" class="block px-3 py-2 text-gray-600 hover:text-green-800">Beranda</a>
+                <a href="profil.html" class="block px-3 py-2 text-gray-600 hover:text-green-800">Profil</a>
+                <a href="program.html" class="block px-3 py-2 text-gray-600 hover:text-green-800">Program</a>
+                <a href="galeri.html" class="block px-3 py-2 text-green-800 font-medium">Galeri</a>
+                <a href="kontak.html" class="block px-3 py-2 text-gray-600 hover:text-green-800">Kontak</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-r from-green-800 to-green-600 pt-24 pb-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h1 class="font-display text-4xl lg:text-6xl font-bold text-white mb-6">
+                    Galeri Kegiatan
+                </h1>
+                <p class="text-xl text-green-100 max-w-3xl mx-auto leading-relaxed">
+                    Dokumentasi kegiatan dan momen berharga dalam perjalanan Karang Taruna Sambong Jaya.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Filters -->
+    <section class="py-12 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-wrap justify-center gap-4">
+                <button class="filter-btn active bg-green-600 text-white px-6 py-3 rounded-full font-medium" data-filter="all">
+                    Semua Kegiatan
+                </button>
+                <button class="filter-btn bg-gray-200 text-gray-700 hover:bg-green-100 px-6 py-3 rounded-full font-medium" data-filter="training">
+                    Pelatihan
+                </button>
+                <button class="filter-btn bg-gray-200 text-gray-700 hover:bg-green-100 px-6 py-3 rounded-full font-medium" data-filter="community">
+                    Kegiatan Komunitas
+                </button>
+                <button class="filter-btn bg-gray-200 text-gray-700 hover:bg-green-100 px-6 py-3 rounded-full font-medium" data-filter="environment">
+                    Lingkungan
+                </button>
+                <button class="filter-btn bg-gray-200 text-gray-700 hover:bg-green-100 px-6 py-3 rounded-full font-medium" data-filter="social">
+                    Bakti Sosial
+                </button>
+                <button class="filter-btn bg-gray-200 text-gray-700 hover:bg-green-100 px-6 py-3 rounded-full font-medium" data-filter="achievement">
+                    Prestasi
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Photo Gallery -->
+    <section class="py-20 bg-stone-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="masonry-grid" id="gallery-grid">
+                <!-- Training Activities -->
+                <div class="masonry-item gallery-item bg-white rounded-xl overflow-hidden shadow-lg" data-category="training">
+                    <img src="resources/training-session.jpg" alt="Pelatihan Kewirausahaan" class="w-full h-64 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-display text-lg font-bold text-green-800 mb-2">Pelatihan Kewirausahaan</h3>
+                        <p class="text-gray-600 text-sm">Peserta belajar membuat rencana bisnis dan strategi pemasaran</p>
+                        <span class="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full mt-2">Pelatihan</span>
+                    </div>
+                </div>
+                
+                <div class="masonry-item gallery-item bg-white rounded-xl overflow-hidden shadow-lg" data-category="training">
+                    <img src="resources/community-activity-1.jpg" alt="Workshop Keterampilan" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-display text-lg font-bold text-green-800 mb-2">Workshop Keterampilan</h3>
+                        <p class="text-gray-600 text-sm">Pemuda belajar membuat kerajinan tangan dari bahan daur ulang</p>
+                        <span class="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full mt-2">Pelatihan</span>
+                    </div>
+                </div>
+                
+                <div class="masonry-item gallery-item bg-white rounded-xl overflow-hidden shadow-lg" data-category="training">
+                    <img src="resources/community-activity-2.jpg" alt="Pelatihan Digital Marketing" class="w-full h-56 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-display text-lg font-bold text-green-800 mb-2">Digital Marketing Training</h3>
+                        <p class="text-gray-600 text-sm">Peserta belajar mempromosikan produk melalui media sosial</p>
+                        <span class="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full mt-2">Pelatihan</span>
+                    </div>
+                </div>
+                
+                <!-- Community Activities -->
+                <div class="masonry-item gallery-item bg-white rounded-xl overflow-hidden shadow-lg" data-category="community">
+                    <img src="resources/youth-gathering.jpg" alt="Kegiatan Komunitas" class="w-full h-52 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-display text-lg font-bold text-green-800 mb-2">Kegiatan Komunitas</h3>
+                        <p class="text-gray-600 text-sm">Pemuda desa berkumpul untuk merencanakan program bersama</p>
+                        <span class="inline-block bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full mt-2">Komunitas</span>
+                    </div>
+                </div>
+                
+                <div class="masonry-item gallery-item bg-white rounded-xl overflow-hidden shadow-lg" data-category="community">
+                    <img src="resources/village-scene.jpg" alt="Pertemuan Rutin" class="w-full h-44 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-display text-lg font-bold text-green-800 mb-2">Pertemuan Rutin</h3>
+                        <p class="text-gray-600 text-sm">Evaluasi program dan perencanaan kegiatan mendatang</p>
+                        <span class="inline-block bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full mt-2">Komunitas</span>
+                    </div>
+                </div>
+                
+                <!-- Environment Activities -->
+                <div class="masonry-item gallery-item bg-white rounded-xl overflow-hidden shadow-lg" data-category="environment">
+                    <img src="resources/youth-gathering.jpg" alt="Penanaman Pohon" class="w-full h-60 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-display text-lg font-bold text-green-800 mb-2">Penanaman Pohon</h3>
+                        <p class="text-gray-600 text-sm">Aksi reboisasi di lahan kritis sekitar desa</p>
+                        <span class="inline-block bg-emerald-100 text-emerald-800 text-xs px-2 py-1 rounded-full mt-2">Lingkungan</span>
+                    </div>
+                </div>
+                
+                <div class="masonry-item gallery-item bg-white rounded-xl overflow-hidden shadow-lg" data-category="environment">
+                    <img src="resources/village-scene.jpg" alt="Pembersihan Sungai" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-display text-lg font-bold text-green-800 mb-2">Pembersihan Sungai</h3>
+                        <p class="text-gray-600 text-sm">Kegiatan menjaga kebersihan ekosistem sungai desa</p>
+                        <span class="inline-block bg-emerald-100 text-emerald-800 text-xs px-2 py-1 rounded-full mt-2">Lingkungan</span>
+                    </div>
+                </div>
+                
+                <!-- Social Activities -->
+                <div class="masonry-item gallery-item bg-white rounded-xl overflow-hidden shadow-lg" data-category="social">
+                    <img src="resources/community-activity-1.jpg" alt="Bakti Sosial" class="w-full h-64 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-display text-lg font-bold text-green-800 mb-2">Bakti Sosial</h3>
+                        <p class="text-gray-600 text-sm">Distribusi sembako untuk warga kurang mampu</p>
+                        <span class="inline-block bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full mt-2">Sosial</span>
+                    </div>
+                </div>
+                
+                <div class="masonry-item gallery-item bg-white rounded-xl overflow-hidden shadow-lg" data-category="social">
+                    <img src="resources/training-session.jpg" alt="Kunjungan Lansia" class="w-full h-52 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-display text-lg font-bold text-green-800 mb-2">Kunjungan Lansia</h3>
+                        <p class="text-gray-600 text-sm">Kegiatan sosial dengan lansia di panti jompo</p>
+                        <span class="inline-block bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full mt-2">Sosial</span>
+                    </div>
+                </div>
+                
+                <!-- Achievements -->
+                <div class="masonry-item gallery-item bg-white rounded-xl overflow-hidden shadow-lg" data-category="achievement">
+                    <img src="resources/community-activity-2.jpg" alt="Penghargaan" class="w-full h-56 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-display text-lg font-bold text-green-800 mb-2">Penghargaan Ketua Terbaik</h3>
+                        <p class="text-gray-600 text-sm">Ketua umum menerima penghargaan dari Bupati</p>
+                        <span class="inline-block bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full mt-2">Prestasi</span>
+                    </div>
+                </div>
+                
+                <div class="masonry-item gallery-item bg-white rounded-xl overflow-hidden shadow-lg" data-category="achievement">
+                    <img src="resources/youth-gathering.jpg" alt="Sertifikat Akreditasi" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-display text-lg font-bold text-green-800 mb-2">Sertifikat Akreditasi</h3>
+                        <p class="text-gray-600 text-sm">Organisasi resmi terverifikasi oleh pemerintah</p>
+                        <span class="inline-block bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full mt-2">Prestasi</span>
+                    </div>
+                </div>
+                
+                <!-- Additional Images -->
+                <div class="masonry-item gallery-item bg-white rounded-xl overflow-hidden shadow-lg" data-category="training">
+                    <img src="resources/village-scene.jpg" alt="Seminar Kewirausahaan" class="w-full h-50 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-display text-lg font-bold text-green-800 mb-2">Seminar Kewirausahaan</h3>
+                        <p class="text-gray-600 text-sm">Pemateri dari berbagai sektor berbagi pengalaman</p>
+                        <span class="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full mt-2">Pelatihan</span>
+                    </div>
+                </div>
+                
+                <div class="masonry-item gallery-item bg-white rounded-xl overflow-hidden shadow-lg" data-category="community">
+                    <img src="resources/training-session.jpg" alt="Festival Budaya" class="w-full h-54 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-display text-lg font-bold text-green-800 mb-2">Festival Budaya</h3>
+                        <p class="text-gray-600 text-sm">Pameran hasil karya dan budaya lokal</p>
+                        <span class="inline-block bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full mt-2">Komunitas</span>
+                    </div>
+                </div>
+                
+                <div class="masonry-item gallery-item bg-white rounded-xl overflow-hidden shadow-lg" data-category="environment">
+                    <img src="resources/community-activity-1.jpg" alt="Edukasi Lingkungan" class="w-full h-46 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-display text-lg font-bold text-green-800 mb-2">Edukasi Lingkungan</h3>
+                        <p class="text-gray-600 text-sm">Sosialisasi pentingnya menjaga lingkungan untuk anak-anak</p>
+                        <span class="inline-block bg-emerald-100 text-emerald-800 text-xs px-2 py-1 rounded-full mt-2">Lingkungan</span>
+                    </div>
+                </div>
+                
+                <div class="masonry-item gallery-item bg-white rounded-xl overflow-hidden shadow-lg" data-category="social">
+                    <img src="resources/youth-gathering.jpg" alt="Donor Darah" class="w-full h-58 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-display text-lg font-bold text-green-800 mb-2">Donor Darah</h3>
+                        <p class="text-gray-600 text-sm">Kegiatan sosial donor darah massal</p>
+                        <span class="inline-block bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full mt-2">Sosial</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Video Section -->
+    <section class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-display text-3xl lg:text-4xl font-bold text-green-800 mb-6">
+                    Video Kegiatan
+                </h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    Dokumentasi video perjalanan dan kegiatan kami dalam bentuk yang lebih dinamis.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-stone-50 rounded-xl overflow-hidden shadow-lg">
+                    <div class="bg-green-100 h-48 flex items-center justify-center">
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M8 5v14l11-7z"/>
+                                </svg>
+                            </div>
+                            <p class="text-green-800 font-medium">Profil Karang Taruna</p>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-display text-xl font-bold text-green-800 mb-3">Video Profil Organisasi</h3>
+                        <p class="text-gray-600 mb-4">Mengenal lebih dekat visi, misi, dan program unggulan kami.</p>
+                        <span class="inline-block bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full">Dokumenter</span>
+                    </div>
+                </div>
+                
+                <div class="bg-stone-50 rounded-xl overflow-hidden shadow-lg">
+                    <div class="bg-orange-100 h-48 flex items-center justify-center">
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-orange-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M8 5v14l11-7z"/>
+                                </svg>
+                            </div>
+                            <p class="text-orange-800 font-medium">Pelatihan Kewirausahaan</p>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-display text-xl font-bold text-green-800 mb-3">Kisah Sukses Peserta</h3>
+                        <p class="text-gray-600 mb-4">Testimoni dari peserta yang telah berhasil membangun usaha.</p>
+                        <span class="inline-block bg-green-100 text-green-800 text-sm px-3 py-1 rounded-full">Testimoni</span>
+                    </div>
+                </div>
+                
+                <div class="bg-stone-50 rounded-xl overflow-hidden shadow-lg">
+                    <div class="bg-emerald-100 h-48 flex items-center justify-center">
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-emerald-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M8 5v14l11-7z"/>
+                                </svg>
+                            </div>
+                            <p class="text-emerald-800 font-medium">Aksi Lingkungan</p>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-display text-xl font-bold text-green-800 mb-3">Reboisasi Lahan Kritis</h3>
+                        <p class="text-gray-600 mb-4">Dokumentasi kegiatan penanaman pohon di wilayah terdegradasi.</p>
+                        <span class="inline-block bg-emerald-100 text-emerald-800 text-sm px-3 py-1 rounded-full">Lingkungan</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics -->
+    <section class="py-20 bg-green-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-display text-3xl lg:text-4xl font-bold text-white mb-6">
+                    Statistik Galeri
+                </h2>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div class="text-center">
+                    <div class="text-4xl lg:text-5xl font-bold text-yellow-400 mb-2">500+</div>
+                    <p class="text-green-100">Foto Kegiatan</p>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl lg:text-5xl font-bold text-yellow-400 mb-2">50+</div>
+                    <p class="text-green-100">Video Dokumentasi</p>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl lg:text-5xl font-bold text-yellow-400 mb-2">25</div>
+                    <p class="text-green-100">Program Dokumentasi</p>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl lg:text-5xl font-bold text-yellow-400 mb-2">8</div>
+                    <p class="text-green-100">Tahun Aktivitas</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lightbox -->
+    <div id="lightbox" class="lightbox">
+        <div class="lightbox-content">
+            <button id="close-lightbox" class="absolute top-4 right-4 text-white text-4xl hover:text-gray-300 z-10">
+                &times;
+            </button>
+            <img id="lightbox-image" src="" alt="">
+            <div class="absolute bottom-4 left-4 right-4 text-white text-center">
+                <h3 id="lightbox-title" class="font-display text-xl font-bold mb-2"></h3>
+                <p id="lightbox-description" class="text-sm"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="font-display text-xl font-bold mb-4">Karang Taruna Sambong Jaya</h3>
+                    <p class="text-gray-300 leading-relaxed">
+                        Organisasi kepemudaan yang berkomitmen untuk mendorong pertumbuhan dan perkembangan masyarakat melalui program pemberdayaan dan pengembangan diri.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-accent font-semibold mb-4">Program Unggulan</h4>
+                    <ul class="space-y-2 text-gray-300">
+                        <li>Pelatihan Kewirausahaan</li>
+                        <li>Pengembangan Keterampilan</li>
+                        <li>Kegiatan Lingkungan</li>
+                        <li>Bakti Sosial</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-accent font-semibold mb-4">Kontak</h4>
+                    <div class="space-y-2 text-gray-300">
+                        <p>📍 Desa Sambong Jaya, Kecamatan Sambong</p>
+                        <p>📞 +62 812-3456-7890</p>
+                        <p>✉️ info@karangtarunasambongjaya.org</p>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 Karang Taruna Sambong Jaya. Hak cipta dilindungi.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="main.js"></script>
+    <script>
+        // Gallery-specific JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            initGalleryFilters();
+            initLightbox();
+        });
+        
+        function initGalleryFilters() {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Update active button
+                    filterBtns.forEach(b => {
+                        b.classList.remove('active', 'bg-green-600', 'text-white');
+                        b.classList.add('bg-gray-200', 'text-gray-700');
+                    });
+                    this.classList.add('active', 'bg-green-600', 'text-white');
+                    this.classList.remove('bg-gray-200', 'text-gray-700');
+                    
+                    // Filter items
+                    const filter = this.dataset.filter;
+                    galleryItems.forEach(item => {
+                        if (filter === 'all' || item.dataset.category === filter) {
+                            item.style.display = 'block';
+                            anime({
+                                targets: item,
+                                opacity: [0, 1],
+                                scale: [0.8, 1],
+                                duration: 400,
+                                easing: 'easeOutQuad',
+                                delay: Math.random() * 200
+                            });
+                        } else {
+                            anime({
+                                targets: item,
+                                opacity: [1, 0],
+                                scale: [1, 0.8],
+                                duration: 300,
+                                easing: 'easeInQuad',
+                                complete: () => {
+                                    item.style.display = 'none';
+                                }
+                            });
+                        }
+                    });
+                });
+            });
+        }
+        
+        function initLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImage = document.getElementById('lightbox-image');
+            const lightboxTitle = document.getElementById('lightbox-title');
+            const lightboxDescription = document.getElementById('lightbox-description');
+            const closeLightbox = document.getElementById('close-lightbox');
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            
+            galleryItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const img = this.querySelector('img');
+                    const title = this.querySelector('h3').textContent;
+                    const description = this.querySelector('p').textContent;
+                    
+                    lightboxImage.src = img.src;
+                    lightboxImage.alt = img.alt;
+                    lightboxTitle.textContent = title;
+                    lightboxDescription.textContent = description;
+                    
+                    lightbox.classList.add('show');
+                    
+                    anime({
+                        targets: lightbox,
+                        opacity: [0, 1],
+                        duration: 300,
+                        easing: 'easeOutQuad'
+                    });
+                });
+            });
+            
+            closeLightbox.addEventListener('click', function() {
+                anime({
+                    targets: lightbox,
+                    opacity: [1, 0],
+                    duration: 300,
+                    easing: 'easeInQuad',
+                    complete: () => {
+                        lightbox.classList.remove('show');
+                    }
+                });
+            });
+            
+            lightbox.addEventListener('click', function(e) {
+                if (e.target === lightbox) {
+                    closeLightbox.click();
+                }
+            });
+            
+            // Keyboard navigation
+            document.addEventListener('keydown', function(e) {
+                if (lightbox.classList.contains('show')) {
+                    if (e.key === 'Escape') {
+                        closeLightbox.click();
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
